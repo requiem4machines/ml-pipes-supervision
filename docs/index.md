@@ -13,6 +13,6 @@ pip install ml-pipes-supervision
 The package installs the required `ml-pipes` core and vision packages, plus
 the Supervision, Roboflow Inference, and tracker runtime dependencies.
 
-Use [Learn](tutorials/index.md) for pipeline-oriented ports of
-Supervision guides, [Reference](INDEX.md) for the public surface, and
-[Coverage](coverage.md) for compatibility status.
+Start with [Detect and Annotate](tutorials/detect_and_annotate.md) for a
+pipeline-oriented port of a Supervision guide. See [Reference](reference.md)
+for the public surface and [Coverage](coverage.md) for compatibility status.

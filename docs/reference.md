@@ -2,7 +2,7 @@
 
 This page catalogs the Supervision compatibility surface in
 `ml_pipes.supervision`. For installation and quickstart, see
-[Home](home.md). For task and upstream API coverage,
+[Home](index.md). For task and upstream API coverage,
 see [`coverage.md`](./coverage.md).
 
 For framework-wide operator concepts, see

@@ -1,5 +1,6 @@
 site_name: ml-pipes-supervision
 site_description: Roboflow Supervision capabilities as composable ml-pipes operators.
+site_url: https://requiem4machines.github.io/ml-pipes-supervision/
 repo_name: ml-pipes-supervision
 
 theme:
@@ -27,7 +28,7 @@ theme:
         name: Switch to light mode
 
 nav:
-  - Home: home.md
+  - Home: index.md
   - Learn:
       - Detect and Annotate: tutorials/detect_and_annotate.md
       - Save Detections: tutorials/save_detections.md
@@ -41,7 +42,7 @@ nav:
       - Count Objects Crossing a Line: recipes/count_objects_crossing_line.md
       - Zero-Shot Object Detection with YOLO-World: recipes/zero_shot_object_detection_with_yolo_world.md
       - Reference: recipes/index.md
-  - Reference: INDEX.md
+  - Reference: reference.md
   - Coverage: coverage.md
 
 plugins:
