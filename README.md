@@ -102,7 +102,9 @@ Want to learn how to use Supervision with `ml-pipes`? Explore our
 
 ## Documentation
 
-Preview the documentation site from the package root without deploying it:
+### Preview locally
+
+Preview the documentation site from the package root:
 
 ```bash
 python -m pip install -e '.[docs]'
@@ -110,7 +112,8 @@ python -m mkdocs serve
 ```
 
 Open `http://127.0.0.1:8000` in a browser. Use `python -m mkdocs build
---strict` for a static deployment check.
+--strict` to check the static site locally. GitHub Actions deploys the
+documentation to GitHub Pages when changes are pushed to `main`.
 
 ## Dependency boundary
 
