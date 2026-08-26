@@ -82,7 +82,8 @@ Supervision data.
 ## Tutorials
 
 Want to learn how to use Supervision with `ml-pipes`? Explore our
-[how-to guides](./docs/tutorials/) and [end-to-end examples](./examples/)!
+[how-to guides](https://requiem4machines.github.io/ml-pipes-supervision/tutorials/detect_and_annotate/)
+and [end-to-end examples](./examples/)!
 
 ## Built with Supervision x ml-pipes
 
@@ -102,21 +103,11 @@ Want to learn how to use Supervision with `ml-pipes`? Explore our
 
 ## Documentation
 
-### Preview locally
-
-Preview the documentation site from the package root:
-
-```bash
-python -m pip install -e '.[docs]'
-python -m mkdocs serve
-```
-
-Open `http://127.0.0.1:8000` in a browser. Use `python -m mkdocs build
---strict` to check the static site locally. GitHub Actions deploys the
-documentation to GitHub Pages when changes are pushed to `main`.
+Visit our [documentation](https://requiem4machines.github.io/ml-pipes-supervision/)
+to learn how `ml-pipes-supervision` composes Supervision capabilities into
+validated pipelines.
 
 ## Dependency boundary
-
 The current dependency surface includes the following ml-pipes bridges. A
 later refactor can move them out of the top-level import surface and reduce
 the base dependency to `ml-pipes-core`:
