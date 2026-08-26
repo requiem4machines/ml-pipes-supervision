@@ -1,0 +1,70 @@
+site_name: ml-pipes-supervision
+site_description: Roboflow Supervision capabilities as composable ml-pipes operators.
+repo_name: ml-pipes-supervision
+
+theme:
+  name: material
+  font:
+    text: Inter
+    code: IBM Plex Mono
+  features:
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+nav:
+  - Home: home.md
+  - Learn:
+      - Detect and Annotate: tutorials/detect_and_annotate.md
+      - Save Detections: tutorials/save_detections.md
+      - Filter Detections: tutorials/filter_detections.md
+      - Detect Small Objects: tutorials/detect_small_objects.md
+      - Oriented Bounding Boxes: tutorials/oriented_bounding_boxes.md
+      - Track Objects on Video: tutorials/track_objects.md
+      - Count in Zone: tutorials/count_in_zone.md
+  - Pipeline Recipes:
+      - Overview: recipes/gallery.md
+      - Count Objects Crossing a Line: recipes/count_objects_crossing_line.md
+      - Zero-Shot Object Detection with YOLO-World: recipes/zero_shot_object_detection_with_yolo_world.md
+      - Reference: recipes/index.md
+  - Reference: INDEX.md
+  - Coverage: coverage.md
+
+plugins:
+  - search
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - attr_list
+  - md_in_html
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
