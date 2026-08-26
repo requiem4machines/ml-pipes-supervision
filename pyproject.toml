@@ -1,0 +1,57 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ml-pipes-supervision"
+version = "0.1.0"
+description = "Roboflow Supervision and Inference compatibility wrappers for ml-pipes"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+keywords = [
+    "annotation",
+    "computer-vision",
+    "pipelines",
+    "supervision",
+    "tracking",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "inference",
+    "ml-pipes-core==0.1.0rc2",
+    "ml-pipes-vision==0.1.0rc2",
+    "supervision>=0.30",
+    "trackers",
+]
+
+[project.optional-dependencies]
+docs = [
+    "mike>=2.1",
+    "mkdocs-material>=9.6",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ml_pipes"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "LICENSE",
+    "README.md",
+    "docs",
+    "examples",
+    "pyproject.toml",
+    "src/ml_pipes",
+]
