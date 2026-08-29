@@ -71,12 +71,14 @@
 }
 
 .recipe-card {
-  --recipe-accent: #287c35;
-  --recipe-fill: #c8e6c9;
-  background: var(--recipe-fill);
-  border: 2px solid var(--black);
-  border-radius: 0;
-  box-shadow: 5px 5px 0 var(--black);
+  --recipe-accent: #0f766e;
+  --recipe-wash: #e7f5f1;
+  background:
+    linear-gradient(135deg, transparent 0 72%, color-mix(in srgb, var(--recipe-accent) 13%, transparent) 72% 100%),
+    var(--recipe-wash);
+  border: 1px solid color-mix(in srgb, var(--recipe-accent) 35%, var(--md-default-fg-color--lightest));
+  border-radius: 0.6rem;
+  box-shadow: 0.25rem 0.25rem 0 color-mix(in srgb, var(--recipe-accent) 26%, transparent);
   display: flex;
   flex-direction: column;
   min-height: 20rem;
@@ -86,25 +88,25 @@
 }
 
 .recipe-card:hover {
-  box-shadow: 7px 7px 0 var(--black);
-  color: var(--ink);
-  transform: translate(-2px, -2px);
+  box-shadow: 0.45rem 0.45rem 0 color-mix(in srgb, var(--recipe-accent) 34%, transparent);
+  color: var(--md-default-fg-color);
+  transform: translate(-0.12rem, -0.12rem);
 }
 
 .recipe-card--obb {
-  --recipe-accent: #a4520c;
-  --recipe-fill: #ffd399;
+  --recipe-accent: #b45309;
+  --recipe-wash: #fff4db;
 }
 
 .recipe-card--world {
-  --recipe-accent: #087786;
-  --recipe-fill: #bfe8ec;
+  --recipe-accent: #1d4ed8;
+  --recipe-wash: #e8f0ff;
 }
 
 .recipe-card__eyebrow,
 .recipe-card__tags {
   color: var(--recipe-accent);
-  font-family: "IBM Plex Mono", monospace;
+  font-family: var(--md-code-font-family);
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -112,7 +114,7 @@
 }
 
 .recipe-card__title {
-  color: var(--ink);
+  color: var(--md-default-fg-color);
   display: block;
   font-size: 1.35rem;
   font-weight: 700;
@@ -136,6 +138,10 @@
   font-size: 0.78rem;
   font-weight: 700;
   margin-top: 0.65rem;
+}
+
+[data-md-color-scheme="slate"] .recipe-card {
+  --recipe-wash: color-mix(in srgb, var(--recipe-accent) 16%, var(--md-default-bg-color));
 }
 
 @media screen and (max-width: 44.984375em) {
