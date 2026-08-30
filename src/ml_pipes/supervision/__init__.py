@@ -1,5 +1,13 @@
 from __future__ import annotations
 
+import numpy as np
+
+from ml_pipes.inspection import (
+    PipelineInspector,
+    ndarray_image_formatter,
+    register_value_formatter,
+)
+
 from .annotators import (
     BackgroundOverlayAnnotator,
     BlurAnnotator,
@@ -41,6 +49,18 @@ from .core import (
 )
 from .views import FPSMonitor, ImageWindow, PlotImage
 from .zones import TriggerLineZone, TriggerZone
+
+# Supervision/OpenCV image arrays use BGR channel order.  Replace ml-pipes'
+# RGB ndarray default so every inspector renders raw arrays correctly once this
+# integration package has been imported.
+# PipelineInspector registers its defaults lazily, so initialize them before
+# replacing the ndarray formatter.
+PipelineInspector()
+register_value_formatter(
+    np.ndarray,
+    ndarray_image_formatter(default_color_space="BGR"),
+    allow_override=True,
+)
 
 
 class Detections:
