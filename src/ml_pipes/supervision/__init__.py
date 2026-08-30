@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+from typing import Any
+
 import numpy as np
 
 from ml_pipes.inspection import (
     PipelineInspector,
+    TextBlock,
     ndarray_image_formatter,
     register_value_formatter,
 )
@@ -61,6 +64,30 @@ register_value_formatter(
     ndarray_image_formatter(default_color_space="BGR"),
     allow_override=True,
 )
+
+
+def _format_ultralytics_result(value: Any) -> list[TextBlock]:
+    """Render an Ultralytics result without implying it produced an image."""
+    prediction_parts = (value.boxes, value.masks, value.probs, value.keypoints, value.obb)
+    summary = value.verbose().strip() if any(part is not None for part in prediction_parts) else "no predictions"
+    return [TextBlock("Ultralytics Results", [
+        ("path", str(value.path)),
+        ("original shape", str(value.orig_shape)),
+        ("detections", str(0 if value.boxes is None else len(value.boxes))),
+        ("masks", str(0 if value.masks is None else len(value.masks))),
+        ("keypoints", str(0 if value.keypoints is None else len(value.keypoints))),
+        ("oriented boxes", str(0 if value.obb is None else len(value.obb))),
+        ("classification", "yes" if value.probs is not None else "no"),
+        ("summary", summary),
+    ])]
+
+
+try:
+    from ultralytics.engine.results import Results as _UltralyticsResults
+except ImportError:
+    pass
+else:
+    register_value_formatter(_UltralyticsResults, _format_ultralytics_result)
 
 
 class Detections:
