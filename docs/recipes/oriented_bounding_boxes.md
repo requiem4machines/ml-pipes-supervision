@@ -16,7 +16,7 @@ python -m pip install ml-pipes-supervision ultralytics
 
 ## 1. Run YOLO11-OBB
 
-The detection flow is the same shape as [Detect and Annotate](detect_and_annotate.md): load an image, decode it, run inference, and convert the result to Supervision `Detections`. Filter to the model's `ship` class and use a red `BoxAnnotator` to show the ordinary axis-aligned envelopes.
+The detection flow is the same shape as [Detect and Annotate](../tutorials/detect_and_annotate.md): load an image, decode it, run inference, and convert the result to Supervision `Detections`. Filter to the model's `ship` class and use a red `BoxAnnotator` to show the ordinary axis-aligned envelopes.
 
 ```python
 import supervision as sv

@@ -15,4 +15,11 @@
     <span class="recipe-card__tags">YOLO-World&nbsp;&nbsp; NMS&nbsp;&nbsp; Filtering</span>
     <span class="recipe-card__action">Open recipe <span aria-hidden="true">&rarr;</span></span>
   </a>
+  <a class="recipe-card recipe-card--obb" href="../oriented_bounding_boxes/">
+    <span class="recipe-card__eyebrow">Aerial Imagery</span>
+    <span class="recipe-card__title">Oriented Bounding Boxes</span>
+    <span class="recipe-card__summary">Detect ships with YOLO11-OBB and render the rotated geometry used for OBB-aware NMS.</span>
+    <span class="recipe-card__tags">YOLO11-OBB&nbsp;&nbsp; NMS&nbsp;&nbsp; Annotation</span>
+    <span class="recipe-card__action">Open recipe <span aria-hidden="true">&rarr;</span></span>
+  </a>
 </div>
