@@ -139,6 +139,26 @@ sv.process_video(
     <source src="https://storage.googleapis.com/com-roboflow-marketing/supervision/cookbooks/yellow-filling-output-1280x720.mp4" type="video/mp4">
 </video>
 
+## Inspect the Pipeline
+
+Use `Pipeline.inspect()` to capture the value at every operator boundary
+without changing the pipeline's final output. The inspection renderer turns
+that captured run into a shareable HTML report.
+
+```python
+from ml_pipes.inspection import PipelineInspector
+
+inspection = frame_pipeline.inspect(representative_frame)
+PipelineInspector().save(inspection, "inspection.html")
+```
+
+The report below captures the complete YOLO-World pipeline on a representative
+video frame.
+
+[![YOLO-World pipeline inspection](../assets/zero_shot_object_detection/inspection.png)](../assets/zero_shot_object_detection/inspection.html)
+
+*Click the image to open the interactive inspection report.*
+
 ## Further reading
 
 - [YOLO-World paper](https://arxiv.org/abs/2401.17270)

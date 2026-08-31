@@ -134,3 +134,20 @@ python examples/run_oriented_bounding_boxes.py --input path/to/photo.jpg
 ```
 
 Use `pipeline.validate()` and `pipeline.describe()` to inspect the model-result to `Detections` conversion and the final annotated `(image, detections)` tuple.
+
+## Inspect the Pipeline
+
+`Pipeline.inspect()` captures the input and output at each operator boundary,
+including the raw Ultralytics result, its conversion to `Detections`, and the
+OBB-aware NMS result. Save the captured run as an interactive HTML report:
+
+```python
+from ml_pipes.inspection import PipelineInspector
+
+inspection = pipeline.inspect("boats.jpg")
+PipelineInspector().save(inspection, "inspection.html")
+```
+
+[![Oriented bounding-box pipeline inspection](../assets/oriented_bounding_boxes/inspection.png)](../assets/oriented_bounding_boxes/inspection.html)
+
+*Click the image to open the interactive inspection report.*

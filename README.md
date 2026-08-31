@@ -79,6 +79,23 @@ For model integrations that produce an `ml_pipes.tensor.TensorRegistry`, use
 zones, or sinks. This is the explicit boundary from tensor post-processing to
 Supervision data.
 
+## Why ml-pipes with Supervision?
+
+Supervision provides the computer-vision building blocks; ml-pipes makes the
+boundaries between those blocks explicit, composable, and inspectable. A
+pipeline can validate its contracts before execution and capture the value at
+each operator boundary with `Pipeline.inspect()`. That makes complex flows
+easier to understand and debug without adding ad-hoc logging to every step.
+
+The Detect Small Objects pipeline is a good example: it tiles the input image,
+runs inference on each tile, gathers the results, stitches detections back into
+the source coordinate system, merges overlaps, and annotates the final image.
+The inspection report shows every boundary in that flow.
+
+[![Detect Small Objects pipeline inspection](docs/assets/detect_small_objects/inspection.png)](docs/assets/detect_small_objects/inspection.html)
+
+*Click the image to open the interactive inspection report.*
+
 ## Tutorials
 
 Want to learn how to use Supervision with `ml-pipes`? Explore our
