@@ -11,7 +11,7 @@ This guide uses Ultralytics' [boats image](https://ultralytics.com/images/boats.
 ## Install dependencies
 
 ```bash
-python -m pip install ml-pipes-supervision ultralytics
+python -m pip install "ml-pipes-supervision @ git+https://github.com/requiem4machines/ml-pipes-supervision.git" ultralytics
 ```
 
 ## 1. Run YOLO11-OBB

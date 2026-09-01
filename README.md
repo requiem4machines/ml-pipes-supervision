@@ -28,11 +28,11 @@ compatibility matrix.
 
 ## Install
 
-Install `ml-pipes-supervision` in a [Python >=3.10](https://www.python.org/)
+Install directly from this repository in a [Python >=3.10](https://www.python.org/)
 environment:
 
 ```bash
-pip install ml-pipes-supervision
+python -m pip install "ml-pipes-supervision @ git+https://github.com/requiem4machines/ml-pipes-supervision.git"
 ```
 
 This also installs the required `ml-pipes` packages, including
@@ -42,6 +42,15 @@ Inference and tracker runtime dependencies.
 The public operators are available from `ml_pipes.supervision`. Roboflow
 Inference and external tracker boundaries are available from
 `ml_pipes.supervision.inference` and `ml_pipes.supervision.trackers`.
+
+To use the integration from another project's `pyproject.toml`, add the same
+Git dependency:
+
+```toml
+dependencies = [
+    "ml-pipes-supervision @ git+https://github.com/requiem4machines/ml-pipes-supervision.git",
+]
+```
 
 ## Quickstart
 
@@ -72,14 +81,12 @@ pipeline = Pipeline(
 )
 ```
 
-https://github.com/roboflow/supervision/assets/26109316/691e219c-0565-4403-9218-ab5644f39bce
-
 For model integrations that produce an `ml_pipes.tensor.TensorRegistry`, use
 `Detections.FromTensorRegistry()` before Supervision annotators, trackers,
 zones, or sinks. This is the explicit boundary from tensor post-processing to
 Supervision data.
 
-## Why ml-pipes with Supervision?
+## Why Supervision with ml-pipes?
 
 Supervision provides the computer-vision building blocks; ml-pipes makes the
 boundaries between those blocks explicit, composable, and inspectable. A
@@ -96,13 +103,10 @@ The inspection report shows every boundary in that flow.
 
 *Click the image to open the interactive inspection report.*
 
-## Tutorials
-
-Want to learn how to use Supervision with `ml-pipes`? Explore our
-[how-to guides](https://requiem4machines.github.io/ml-pipes-supervision/tutorials/detect_and_annotate/)
-and [end-to-end examples](./examples/)!
-
 ## Built with Supervision x ml-pipes
+
+<details>
+<summary>View supported Supervision example pipelines</summary>
 
 | Example | Upstream Source | Section | Note |
 |---|---|---|---|
@@ -118,18 +122,14 @@ and [end-to-end examples](./examples/)!
 | [`run_zero_shot_object_detection.py`](./examples/run_zero_shot_object_detection.py) | [`Zero-Shot Object Detection with YOLO-World` (`0.30.0`)](https://supervision.roboflow.com/0.30.0/notebooks/zero-shot-object-detection-with-yolo-world/) | `Process Video` | Detects objects matching a supplied text prompt and filters duplicate or oversized predictions. |
 | [`run_oriented_bounding_boxes.py`](./examples/run_oriented_bounding_boxes.py) | [`Oriented Bounding Boxes` (`0.30.0`)](https://supervision.roboflow.com/0.30.0/notebooks/oriented-bounding-boxes/) | `Oriented Box Annotation` | Detects ships and draws their rotated bounding boxes. |
 
-## Documentation
+</details>
 
-Visit our [documentation](https://requiem4machines.github.io/ml-pipes-supervision/)
-to learn how `ml-pipes-supervision` composes Supervision capabilities into
-validated pipelines.
+## Tutorials
 
-## Dependency boundary
-The current dependency surface includes the following ml-pipes bridges. A
-later refactor can move them out of the top-level import surface and reduce
-the base dependency to `ml-pipes-core`:
+Want to learn how to use Supervision with `ml-pipes`? Explore our
+[how-to guides](https://requiem4machines.github.io/ml-pipes-supervision/tutorials/detect_and_annotate/)
+and [end-to-end examples](./examples/)!
 
-- `ImagePayload` to `ndarray` conversion
-- `TensorRegistry` to `sv.Detections` conversion
-- Vision `TileRect` detection stitching
-- `ImagePayload` convenience support in inference and image-window operators
+The GitHub Pages tutorials preserve the corresponding Supervision guides and
+add their `ml-pipes` counterparts, so you can compare both approaches side by
+side.
