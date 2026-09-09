@@ -16,6 +16,32 @@ source .venv/bin/activate
 python -m pip install -e .
 ```
 
+## Tests
+
+Install the test dependencies, then run the full suite from the repository
+root before submitting a change:
+
+```bash
+python -m pip install -e '.[test]'
+python -m pytest -q
+```
+
+Add or update tests in `tests/` for behavior changes. While developing, run a
+single test module with:
+
+```bash
+python -m pytest tests/test_exports.py -q
+```
+
+The suite may emit deprecation warnings from third-party dependencies; these
+warnings do not currently fail the test run.
+
+## Pull requests
+
+Keep changes focused and include tests for behavior changes. Update the
+documentation and `docs/coverage.md` when a change adds or changes a public
+Supervision compatibility wrapper.
+
 ## Documentation
 
 Preview the documentation site locally from the package root:

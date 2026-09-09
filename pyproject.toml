@@ -38,6 +38,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+test = [
+    "pytest>=8",
+]
 docs = [
     "mike>=2.1",
     "mkdocs-material>=9.6",
