@@ -11,10 +11,12 @@ This guide uses Ultralytics' [boats image](https://ultralytics.com/images/boats.
 ## Install dependencies
 
 ```bash
-python -m pip install "ml-pipes-supervision @ git+https://github.com/requiem4machines/ml-pipes-supervision.git" ultralytics
+python -m pip install \
+  "ml-pipes-supervision @ git+https://github.com/requiem4machines/ml-pipes-supervision.git" \
+  "ml-pipes-ultralytics @ git+https://github.com/requiem4machines/ml-pipes-ultralytics.git"
 ```
 
-## 1. Run YOLO11-OBB
+## Run YOLO11-OBB
 
 The detection flow is the same shape as [Detect and Annotate](../tutorials/detect_and_annotate.md): load an image, decode it, run inference, and convert the result to Supervision `Detections`. Filter to the model's `ship` class and use a red `BoxAnnotator` to show the ordinary axis-aligned envelopes.
 
@@ -22,8 +24,9 @@ The detection flow is the same shape as [Detect and Annotate](../tutorials/detec
 import supervision as sv
 
 from ml_pipes.core import Pipeline
-from ml_pipes.standard import Recall, Store
+from ml_pipes.standard import Recall, Select, Store
 from ml_pipes.supervision import BoxAnnotator, Detections, ImageToArray
+from ml_pipes.ultralytics import yolo
 from ml_pipes.vision import Decode, LoadFile
 
 pipeline = Pipeline(
@@ -32,7 +35,8 @@ pipeline = Pipeline(
         Decode(),
         ImageToArray(),
         Store("source_image"),
-        UltralyticsInference(model_id="yolo11n-obb.pt", image_size=1024),
+        yolo.Predict(model="yolo11n-obb.pt", imgsz=1024),
+        Select(0),
         Detections.FromUltralytics(),
         Detections.Filter(
             lambda detections: detections.data["class_name"] == "ship"
@@ -50,20 +54,21 @@ annotated_image, detections = pipeline("boats.jpg")
 
 Those red envelopes contain each angled hull, but they include extra background and frequently overlap their neighbours.
 
-## 2. Apply OBB-aware NMS
+## Apply OBB-aware NMS
 
 `Detections.NMS` is OBB-aware: when `data["xyxyxyxy"]` is available, Supervision compares the rotated quadrilaterals rather than the larger axis-aligned envelopes. This helps prevent nearby, distinct boats from being treated as duplicates.
 
 To make the separate NMS boundary observable, relax Ultralytics' own NMS from its default threshold to `0.9`. The model retains more overlapping candidates and Supervision then performs the final deduplication.
 
-```{ .py hl_lines="7 10" }
+```{ .py hl_lines="8 12" }
 pipeline = Pipeline(
     [
         LoadFile(),
         Decode(),
         ImageToArray(),
         Store("source_image"),
-        UltralyticsInference(model_id="yolo11n-obb.pt", image_size=1024, nms_iou_threshold=0.9),
+        yolo.Predict(model="yolo11n-obb.pt", imgsz=1024, iou=0.9),
+        Select(0),
         Detections.FromUltralytics(),
         Detections.Filter(
             lambda detections: detections.data["class_name"] == "ship"
@@ -92,11 +97,11 @@ InspectionResult:
 
 The OBB corners remain available on the returned `Detections`.
 
-## 3. Render the OBB corners
+## Render the OBB corners
 
 Finally, replace the red `BoxAnnotator` with a green `OrientedBoxAnnotator`. The model, conversion, filtering, and NMS steps are unchanged.
 
-```{ .py hl_lines="14" }
+```{ .py hl_lines="15" }
 from ml_pipes.supervision import OrientedBoxAnnotator
 
 pipeline = Pipeline(
@@ -105,7 +110,8 @@ pipeline = Pipeline(
         Decode(),
         ImageToArray(),
         Store("source_image"),
-        UltralyticsInference(model_id="yolo11n-obb.pt", image_size=1024, nms_iou_threshold=0.9),
+        yolo.Predict(model="yolo11n-obb.pt", imgsz=1024, iou=0.9),
+        Select(0),
         Detections.FromUltralytics(),
         Detections.Filter(
             lambda detections: detections.data["class_name"] == "ship"
