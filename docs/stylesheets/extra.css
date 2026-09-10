@@ -103,6 +103,11 @@
   --recipe-wash: #e8f0ff;
 }
 
+.recipe-card--faces {
+  --recipe-accent: #7c3aed;
+  --recipe-wash: #f3e8ff;
+}
+
 .recipe-card__eyebrow,
 .recipe-card__tags {
   color: var(--recipe-accent);

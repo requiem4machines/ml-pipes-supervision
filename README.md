@@ -121,6 +121,7 @@ The inspection report shows every boundary in that flow.
 | [`run_detect_small_objects.py`](./examples/run_detect_small_objects.py) | [`Detect Small Objects` (`0.30.0`)](https://supervision.roboflow.com/0.30.0/how_to/detect_small_objects/) | `Use InferenceSlicer` | Splits an image into overlapping tiles, detects objects per tile, and merges the results. |
 | [`run_zero_shot_object_detection.py`](./examples/run_zero_shot_object_detection.py) | [`Zero-Shot Object Detection with YOLO-World` (`0.30.0`)](https://supervision.roboflow.com/0.30.0/notebooks/zero-shot-object-detection-with-yolo-world/) | `Process Video` | Detects objects matching a supplied text prompt and filters duplicate or oversized predictions. |
 | [`run_oriented_bounding_boxes.py`](./examples/run_oriented_bounding_boxes.py) | [`Oriented Bounding Boxes` (`0.30.0`)](https://supervision.roboflow.com/0.30.0/notebooks/oriented-bounding-boxes/) | `Oriented Box Annotation` | Detects ships and draws their rotated bounding boxes. |
+| [`run_blur_faces.py`](./examples/run_blur_faces.py) | [`Blurring Faces`](https://github.com/roboflow/supervision/blob/develop/docs/notebooks/blurring_faces.ipynb) | `Detecting Faces`, `Blurring the Face` | Detects faces in MediaPipe's sample image locally, then blurs them. |
 
 </details>
 

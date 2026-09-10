@@ -38,6 +38,7 @@ nav:
       - Count in Zone: tutorials/count_in_zone.md
   - Pipeline Recipes:
       - Overview: recipes/gallery.md
+      - Blurring Faces: recipes/blurring_faces.md
       - Count Objects Crossing a Line: recipes/count_objects_crossing_line.md
       - Zero-Shot Object Detection with YOLO-World: recipes/zero_shot_object_detection_with_yolo_world.md
       - Oriented Bounding Boxes: recipes/oriented_bounding_boxes.md

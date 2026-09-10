@@ -1,6 +1,13 @@
 # Pipeline Recipes
 
 <div class="recipe-gallery">
+  <a class="recipe-card recipe-card--faces" href="../blurring_faces/">
+    <span class="recipe-card__eyebrow">Privacy</span>
+    <span class="recipe-card__title">Blurring Faces</span>
+    <span class="recipe-card__summary">Detect faces in MediaPipe's sample image and redact them with a blur annotation.</span>
+    <span class="recipe-card__tags">Face Detection&nbsp;&nbsp; Privacy&nbsp;&nbsp; Blur</span>
+    <span class="recipe-card__action">Open recipe <span aria-hidden="true">&rarr;</span></span>
+  </a>
   <a class="recipe-card recipe-card--line" href="../count_objects_crossing_line/">
     <span class="recipe-card__eyebrow">Video Analytics</span>
     <span class="recipe-card__title">Count Objects Crossing a Line</span>
