@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from typing import Any, cast
 
 import numpy as np
@@ -7,6 +8,8 @@ import numpy.typing as npt
 import supervision as sv
 
 from ml_pipes.operator import Operator
+
+from .core import Detection
 
 
 @Operator
@@ -531,6 +534,62 @@ class LabelAnnotator:
                     parts.append(f"{float(confidence[index]):.2f}")
             rendered.append(" ".join(parts))
         return rendered
+
+
+@Operator
+class CustomLabelAnnotator(LabelAnnotator):
+    """Annotate detections with labels generated from a per-detection callback."""
+
+    def __init__(
+        self,
+        label: Callable[[Detection], str],
+        color: sv.Color | sv.ColorPalette | str = sv.ColorPalette.DEFAULT,
+        color_lookup: sv.ColorLookup = sv.ColorLookup.CLASS,
+        text_color: sv.Color | sv.ColorPalette | str = sv.Color.WHITE,
+        text_scale: float = 0.5,
+        text_thickness: int = 1,
+        text_padding: int = 10,
+        text_position: sv.Position = sv.Position.TOP_LEFT,
+        text_offset: tuple[int, int] = (0, 0),
+        border_radius: int = 0,
+        smart_position: bool = False,
+        max_line_length: int | None = None,
+    ) -> None:
+        super().__init__(
+            color=color,
+            color_lookup=color_lookup,
+            text_color=text_color,
+            text_scale=text_scale,
+            text_thickness=text_thickness,
+            text_padding=text_padding,
+            text_position=text_position,
+            text_offset=text_offset,
+            border_radius=border_radius,
+            smart_position=smart_position,
+            max_line_length=max_line_length,
+        )
+        self.label = label
+
+    def _labels(self, detections: sv.Detections) -> list[str]:
+        labels: list[str] = []
+        for xyxy, mask, confidence, class_id, tracker_id, data in detections:
+            label = self.label(
+                Detection(
+                    xyxy=xyxy,
+                    mask=mask,
+                    confidence=confidence,
+                    class_id=class_id,
+                    tracker_id=tracker_id,
+                    data=data,
+                )
+            )
+            if not isinstance(label, str):
+                raise TypeError(
+                    "CustomLabelAnnotator callback must return str, "
+                    f"got {type(label).__name__}."
+                )
+            labels.append(label)
+        return labels
 
 
 @Operator

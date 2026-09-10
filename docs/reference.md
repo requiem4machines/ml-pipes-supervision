@@ -39,9 +39,13 @@ All annotators preserve the detection handoff: `(scene, detections)` ->
 Supervision, so annotation never mutates the source image. Constructor values
 configure the underlying Supervision annotator.
 
+`CustomLabelAnnotator(label)` calls `label(detection)` for every detection.
+The callback receives a `Detection` with its box, confidence, class ID, tracker
+ID, and per-detection data, and must return the label text.
+
 | Operator group | Operators |
 |---|---|
-| Detection | `BoxAnnotator`, `BoxCornerAnnotator`, `CircleAnnotator`, `ColorAnnotator`, `DotAnnotator`, `EllipseAnnotator`, `HaloAnnotator`, `LabelAnnotator`, `OrientedBoxAnnotator`, `RichLabelAnnotator`, `RoundBoxAnnotator`, `TriangleAnnotator` |
+| Detection | `BoxAnnotator`, `BoxCornerAnnotator`, `CircleAnnotator`, `ColorAnnotator`, `CustomLabelAnnotator`, `DotAnnotator`, `EllipseAnnotator`, `HaloAnnotator`, `LabelAnnotator`, `OrientedBoxAnnotator`, `RichLabelAnnotator`, `RoundBoxAnnotator`, `TriangleAnnotator` |
 | Segmentation and region | `MaskAnnotator`, `PolygonAnnotator`, `PolygonZoneAnnotator`, `BlurAnnotator`, `CropAnnotator`, `HeatMapAnnotator`, `PixelateAnnotator` |
 | Tracking and overlays | `TraceAnnotator`, `FPSAnnotator`, `LineZoneAnnotator`, `BackgroundOverlayAnnotator`, `ComparisonAnnotator`, `IconAnnotator`, `PercentageBarAnnotator` |
 
@@ -50,6 +54,7 @@ configure the underlying Supervision annotator.
 | Operator | Input -> Output | Notes |
 |---|---|---|
 | `TriggerZone(zone)` | `sv.Detections` -> `sv.Detections` | Keeps detections for which `sv.PolygonZone.trigger(...)` is true. |
+| `TrackingTimer(fps, field="tracking_time", reset_missing_tracks=True)` | tracked `sv.Detections` -> `sv.Detections` | Adds elapsed time for tracks present in the incoming stream. Unconfirmed negative IDs receive `0.0`; set `reset_missing_tracks=False` to retain a track's entry time across gaps. Filtering stages define membership. |
 | `TriggerLineZone(line_zone)` | `sv.Detections` -> `sv.Detections` | Updates the line-zone counters and retains detections. |
 | `PlotImage(at=None)` | payload -> payload | Displays one image through `sv.plot_image(...)`. |
 | `ImageWindow(title="supervision", at=None)` | payload -> payload | Updates an OpenCV-backed Supervision image window. |

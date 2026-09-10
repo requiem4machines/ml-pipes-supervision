@@ -15,6 +15,7 @@ from .annotators import (
     CircleAnnotator,
     ColorAnnotator,
     ComparisonAnnotator,
+    CustomLabelAnnotator,
     CropAnnotator,
     DotAnnotator,
     EllipseAnnotator,
@@ -44,10 +45,11 @@ from .core import (
     DetectionsNMM,
     DetectionsSmoother,
     DetectionsStitch,
+    Detection,
     ImageToArray,
 )
 from .views import FPSMonitor, ImageWindow, PlotImage
-from .zones import TriggerLineZone, TriggerZone
+from .zones import TrackingTimer, TriggerLineZone, TriggerZone
 
 # Supervision/OpenCV image arrays use BGR channel order.  Replace ml-pipes'
 # RGB ndarray default so every inspector renders raw arrays correctly once this
@@ -79,6 +81,8 @@ __all__ = [
     "CircleAnnotator",
     "ColorAnnotator",
     "ComparisonAnnotator",
+    "CustomLabelAnnotator",
+    "Detection",
     "CropAnnotator",
     "Detections",
     "DetectionsSmoother",
@@ -103,6 +107,7 @@ __all__ = [
     "RichLabelAnnotator",
     "RoundBoxAnnotator",
     "TraceAnnotator",
+    "TrackingTimer",
     "TriangleAnnotator",
     "TriggerLineZone",
     "TriggerZone",

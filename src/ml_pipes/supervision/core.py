@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
+from dataclasses import dataclass
 from typing import Any, cast
 
 import numpy as np
@@ -11,6 +12,18 @@ from supervision.detection.tools.inference_slicer import move_detections
 from ml_pipes.operator import Operator
 from ml_pipes.tensor import TensorRegistry
 from ml_pipes.vision import ImagePayload, TileRect
+
+
+@dataclass(frozen=True)
+class Detection:
+    """One Supervision detection and its per-detection data."""
+
+    xyxy: npt.NDArray[np.number]
+    mask: npt.NDArray[np.bool_] | None
+    confidence: np.generic | None
+    class_id: np.generic | None
+    tracker_id: np.generic | None
+    data: Mapping[str, Any]
 
 
 @Operator
