@@ -58,3 +58,6 @@ include = [
     "pyproject.toml",
     "src/ml_pipes",
 ]
+
+[tool.hatch.metadata]
+allow-direct-references = true
