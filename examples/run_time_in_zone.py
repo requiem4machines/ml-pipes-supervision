@@ -22,7 +22,6 @@ from ml_pipes.supervision.trackers import ByteTrack
 from ml_pipes.supervision import (
     BoxAnnotator,
     CustomLabelAnnotator,
-    Detection,
     Detections,
     ImageWindow,
     PolygonZoneAnnotator,
@@ -46,16 +45,6 @@ def build_zone(width: int, height: int) -> sv.PolygonZone:
     return sv.PolygonZone(polygon=polygon)
 
 
-def format_time_in_zone(detection: Detection) -> str:
-    """Format a tracked detection's continuous time in the zone as ``MM:SS``."""
-    if detection.tracker_id is None:
-        raise ValueError("Time-in-zone labels require a tracker ID.")
-
-    seconds = float(detection.data["time_in_zone"])
-    minutes, seconds = divmod(int(seconds), 60)
-    return f"#{int(detection.tracker_id)} {minutes:02d}:{seconds:02d}"
-
-
 def build_frame_pipeline(
     model_id: str,
     api_key: str | None,
@@ -74,7 +63,13 @@ def build_frame_pipeline(
             Recall("source_frame", prepend=True),
             TraceAnnotator(),
             BoxAnnotator(),
-            CustomLabelAnnotator(format_time_in_zone),
+            CustomLabelAnnotator(
+                lambda detection: (
+                    f"#{int(detection.tracker_id) if detection.tracker_id is not None else -1} "
+                    f"{int(float(detection.data['time_in_zone'])) // 60:02d}:"
+                    f"{int(float(detection.data['time_in_zone'])) % 60:02d}"
+                )
+            ),
             PolygonZoneAnnotator(zone=zone),
             ImageWindow("Time In Zone", at=0),
         ],
