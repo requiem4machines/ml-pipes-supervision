@@ -35,6 +35,7 @@ nav:
       - Filter Detections: tutorials/filter_detections.md
       - Detect Small Objects: tutorials/detect_small_objects.md
       - Track Objects on Video: tutorials/track_objects.md
+      - Detection Heatmaps: tutorials/heatmaps.md
       - Count in Zone: tutorials/count_in_zone.md
       - Time in Zone: tutorials/time_in_zone.md
   - Pipeline Recipes:
