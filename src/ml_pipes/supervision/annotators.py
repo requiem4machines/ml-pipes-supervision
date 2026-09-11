@@ -427,69 +427,21 @@ class DotAnnotator:
         return annotated, detections
 
 
-@Operator
-class LabelAnnotator:
-    """Annotate detections with default, selected, or custom label text."""
+class _LabelFormatter:
+    """Build standard label text from fields on each detection."""
 
     def __init__(
         self,
-        color: sv.Color | sv.ColorPalette | str = sv.ColorPalette.DEFAULT,
-        color_lookup: sv.ColorLookup = sv.ColorLookup.CLASS,
-        text_color: sv.Color | sv.ColorPalette | str = sv.Color.WHITE,
-        text_scale: float = 0.5,
-        text_thickness: int = 1,
-        text_padding: int = 10,
-        text_position: sv.Position = sv.Position.TOP_LEFT,
-        text_offset: tuple[int, int] = (0, 0),
-        border_radius: int = 0,
-        smart_position: bool = False,
-        max_line_length: int | None = None,
+        *,
         show_class: bool = False,
         show_confidence: bool = False,
         show_tracker_id: bool = False,
         tracker_id_prefix: str = "#",
-        label_formatter: Callable[[Detection], str] | None = None,
     ) -> None:
-        if label_formatter is not None and any(
-            (show_class, show_confidence, show_tracker_id)
-        ):
-            raise ValueError(
-                "LabelAnnotator label_formatter cannot be combined with "
-                "show_class, show_confidence, or show_tracker_id."
-            )
-        if label_formatter is not None and not callable(label_formatter):
-            raise TypeError("LabelAnnotator label_formatter must be callable.")
-
         self.show_class = show_class
         self.show_confidence = show_confidence
         self.show_tracker_id = show_tracker_id
         self.tracker_id_prefix = tracker_id_prefix
-        self.label_formatter = label_formatter
-        self.annotator = sv.LabelAnnotator(
-            color=color,
-            color_lookup=color_lookup,
-            text_color=text_color,
-            text_scale=text_scale,
-            text_thickness=text_thickness,
-            text_padding=text_padding,
-            text_position=text_position,
-            text_offset=text_offset,
-            border_radius=border_radius,
-            smart_position=smart_position,
-            max_line_length=max_line_length,
-        )
-
-    def __call__(
-        self,
-        scene: npt.NDArray[np.uint8],
-        detections: sv.Detections,
-    ) -> tuple[npt.NDArray[np.uint8], sv.Detections]:
-        annotated = self.annotator.annotate(
-            scene=scene.copy(),
-            detections=detections,
-            labels=self._labels(detections),
-        )
-        return annotated, detections
 
     @staticmethod
     def _optional_class_labels(detections: sv.Detections) -> list[str] | None:
@@ -518,28 +470,6 @@ class LabelAnnotator:
         return cast(npt.NDArray[np.int32], np.asarray(tracker_id, dtype=np.int32))
 
     def _labels(self, detections: sv.Detections) -> list[str] | None:
-        label_formatter = self.label_formatter
-        if label_formatter is not None:
-            labels: list[str] = []
-            for xyxy, mask, confidence, class_id, tracker_id, data in detections:
-                rendered = label_formatter(
-                    Detection(
-                        xyxy=xyxy,
-                        mask=mask,
-                        confidence=confidence,
-                        class_id=class_id,
-                        tracker_id=tracker_id,
-                        data=data,
-                    )
-                )
-                if not isinstance(rendered, str):
-                    raise TypeError(
-                        "LabelAnnotator label_formatter must return str, "
-                        f"got {type(rendered).__name__}."
-                    )
-                labels.append(rendered)
-            return labels
-
         if not any((self.show_class, self.show_confidence, self.show_tracker_id)):
             return None
 
@@ -571,6 +501,120 @@ class LabelAnnotator:
             rendered.append(" ".join(parts))
         return rendered
 
+    def __call__(self, detections: sv.Detections) -> list[str] | None:
+        return self._labels(detections)
+
+
+class _CustomLabelFormatter:
+    """Build one label from each detection with a user-provided callback."""
+
+    def __init__(self, label_formatter: Callable[[Detection], str]) -> None:
+        self.label_formatter = label_formatter
+
+    def __call__(self, detections: sv.Detections) -> list[str]:
+        labels: list[str] = []
+        for xyxy, mask, confidence, class_id, tracker_id, data in detections:
+            rendered = self.label_formatter(
+                Detection(
+                    xyxy=xyxy,
+                    mask=mask,
+                    confidence=confidence,
+                    class_id=class_id,
+                    tracker_id=tracker_id,
+                    data=data,
+                )
+            )
+            if not isinstance(rendered, str):
+                raise TypeError(
+                    "label_formatter must return str, "
+                    f"got {type(rendered).__name__}."
+                )
+            labels.append(rendered)
+        return labels
+
+
+def _build_label_formatter(
+    *,
+    show_class: bool,
+    show_confidence: bool,
+    show_tracker_id: bool,
+    tracker_id_prefix: str,
+    custom_label_formatter: Callable[[Detection], str] | None,
+) -> Callable[[sv.Detections], list[str] | None]:
+    if custom_label_formatter is not None:
+        if any((show_class, show_confidence, show_tracker_id)):
+            raise ValueError(
+                "label_formatter cannot be combined with show_class, "
+                "show_confidence, or show_tracker_id."
+            )
+        if not callable(custom_label_formatter):
+            raise TypeError("label_formatter must be callable.")
+        return _CustomLabelFormatter(custom_label_formatter)
+
+    return _LabelFormatter(
+        show_class=show_class,
+        show_confidence=show_confidence,
+        show_tracker_id=show_tracker_id,
+        tracker_id_prefix=tracker_id_prefix,
+    )
+
+
+@Operator
+class LabelAnnotator:
+    """Annotate detections with default, selected, or custom label text."""
+
+    def __init__(
+        self,
+        color: sv.Color | sv.ColorPalette | str = sv.ColorPalette.DEFAULT,
+        color_lookup: sv.ColorLookup = sv.ColorLookup.CLASS,
+        text_color: sv.Color | sv.ColorPalette | str = sv.Color.WHITE,
+        text_scale: float = 0.5,
+        text_thickness: int = 1,
+        text_padding: int = 10,
+        text_position: sv.Position = sv.Position.TOP_LEFT,
+        text_offset: tuple[int, int] = (0, 0),
+        border_radius: int = 0,
+        smart_position: bool = False,
+        max_line_length: int | None = None,
+        show_class: bool = False,
+        show_confidence: bool = False,
+        show_tracker_id: bool = False,
+        tracker_id_prefix: str = "#",
+        label_formatter: Callable[[Detection], str] | None = None,
+    ) -> None:
+        self._label_formatter = _build_label_formatter(
+            show_class=show_class,
+            show_confidence=show_confidence,
+            show_tracker_id=show_tracker_id,
+            tracker_id_prefix=tracker_id_prefix,
+            custom_label_formatter=label_formatter,
+        )
+        self.annotator = sv.LabelAnnotator(
+            color=color,
+            color_lookup=color_lookup,
+            text_color=text_color,
+            text_scale=text_scale,
+            text_thickness=text_thickness,
+            text_padding=text_padding,
+            text_position=text_position,
+            text_offset=text_offset,
+            border_radius=border_radius,
+            smart_position=smart_position,
+            max_line_length=max_line_length,
+        )
+
+    def __call__(
+        self,
+        scene: npt.NDArray[np.uint8],
+        detections: sv.Detections,
+    ) -> tuple[npt.NDArray[np.uint8], sv.Detections]:
+        annotated = self.annotator.annotate(
+            scene=scene.copy(),
+            detections=detections,
+            labels=self._label_formatter(detections),
+        )
+        return annotated, detections
+
 
 @Operator
 class RichLabelAnnotator:
@@ -587,7 +631,19 @@ class RichLabelAnnotator:
         border_radius: int = 0,
         smart_position: bool = False,
         max_line_length: int | None = None,
+        show_class: bool = False,
+        show_confidence: bool = False,
+        show_tracker_id: bool = False,
+        tracker_id_prefix: str = "#",
+        label_formatter: Callable[[Detection], str] | None = None,
     ) -> None:
+        self._label_formatter = _build_label_formatter(
+            show_class=show_class,
+            show_confidence=show_confidence,
+            show_tracker_id=show_tracker_id,
+            tracker_id_prefix=tracker_id_prefix,
+            custom_label_formatter=label_formatter,
+        )
         self.annotator = sv.RichLabelAnnotator(
             color=color,
             color_lookup=color_lookup,
@@ -607,7 +663,11 @@ class RichLabelAnnotator:
         scene: npt.NDArray[np.uint8],
         detections: sv.Detections,
     ) -> tuple[npt.NDArray[np.uint8], sv.Detections]:
-        annotated = self.annotator.annotate(scene=scene.copy(), detections=detections)
+        annotated = self.annotator.annotate(
+            scene=scene.copy(),
+            detections=detections,
+            labels=self._label_formatter(detections),
+        )
         return annotated, detections
 
 

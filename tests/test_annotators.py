@@ -2,7 +2,12 @@ import numpy as np
 import pytest
 import supervision as sv
 
-from ml_pipes.supervision import BoxAnnotator, Detection, LabelAnnotator
+from ml_pipes.supervision import (
+    BoxAnnotator,
+    Detection,
+    LabelAnnotator,
+    RichLabelAnnotator,
+)
 
 
 def test_box_annotator_preserves_source_scene() -> None:
@@ -53,3 +58,27 @@ def test_label_annotator_requires_string_label() -> None:
 def test_label_annotator_rejects_callback_with_standard_fields() -> None:
     with pytest.raises(ValueError, match="cannot be combined"):
         LabelAnnotator(label_formatter=lambda _: "label", show_class=True)
+
+
+def test_rich_label_annotator_passes_each_detection_to_callback() -> None:
+    scene = np.zeros((32, 32, 3), dtype=np.uint8)
+    detections = sv.Detections(
+        xyxy=np.array([[4, 4, 28, 28]], dtype=np.float32),
+        class_id=np.array([3], dtype=np.int32),
+        tracker_id=np.array([12], dtype=np.int32),
+    )
+    received: list[Detection] = []
+
+    annotated, returned_detections = RichLabelAnnotator(
+        label_formatter=lambda detection: received.append(detection) or "車両 #12"
+    )(scene, detections)
+
+    assert annotated is not scene
+    assert not np.array_equal(annotated, scene)
+    assert returned_detections is detections
+    assert received[0].tracker_id == 12
+
+
+def test_rich_label_annotator_rejects_callback_with_standard_fields() -> None:
+    with pytest.raises(ValueError, match="cannot be combined"):
+        RichLabelAnnotator(label_formatter=lambda _: "label", show_class=True)

@@ -39,9 +39,11 @@ All annotators preserve the detection handoff: `(scene, detections)` ->
 Supervision, so annotation never mutates the source image. Constructor values
 configure the underlying Supervision annotator.
 
-`LabelAnnotator(label_formatter=...)` calls the formatter for every detection.
-The callback receives a `Detection` with its box, confidence, class ID,
-tracker ID, and per-detection data, and must return the label text.
+`LabelAnnotator` and `RichLabelAnnotator` can both compose class,
+confidence, and tracker-ID labels with the `show_*` options, or create labels
+from any detection data with `label_formatter=...`. The callback receives a
+`Detection` with its box, confidence, class ID, tracker ID, and per-detection
+data, and must return the label text.
 
 | Operator group | Operators |
 |---|---|
