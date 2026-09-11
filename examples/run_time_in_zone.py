@@ -21,9 +21,9 @@ from ml_pipes.supervision.inference import RoboflowInference
 from ml_pipes.supervision.trackers import ByteTrack
 from ml_pipes.supervision import (
     BoxAnnotator,
-    CustomLabelAnnotator,
     Detections,
     ImageWindow,
+    LabelAnnotator,
     PolygonZoneAnnotator,
     TrackingTimer,
     TraceAnnotator,
@@ -63,8 +63,8 @@ def build_frame_pipeline(
             Recall("source_frame", prepend=True),
             TraceAnnotator(),
             BoxAnnotator(),
-            CustomLabelAnnotator(
-                lambda detection: (
+            LabelAnnotator(
+                label_formatter=lambda detection: (
                     f"#{int(detection.tracker_id) if detection.tracker_id is not None else -1} "
                     f"{int(float(detection.data['time_in_zone'])) // 60:02d}:"
                     f"{int(float(detection.data['time_in_zone'])) % 60:02d}"

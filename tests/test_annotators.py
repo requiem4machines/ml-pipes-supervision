@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 import supervision as sv
 
-from ml_pipes.supervision import BoxAnnotator, CustomLabelAnnotator, Detection
+from ml_pipes.supervision import BoxAnnotator, Detection, LabelAnnotator
 
 
 def test_box_annotator_preserves_source_scene() -> None:
@@ -21,7 +21,7 @@ def test_box_annotator_preserves_source_scene() -> None:
     assert returned_detections is detections
 
 
-def test_custom_label_annotator_passes_each_detection_to_callback() -> None:
+def test_label_annotator_passes_each_detection_to_callback() -> None:
     scene = np.zeros((32, 32, 3), dtype=np.uint8)
     detections = sv.Detections(
         xyxy=np.array([[4, 4, 28, 28]], dtype=np.float32),
@@ -31,8 +31,8 @@ def test_custom_label_annotator_passes_each_detection_to_callback() -> None:
     )
     received: list[Detection] = []
 
-    annotated, returned_detections = CustomLabelAnnotator(
-        lambda detection: received.append(detection) or "01:30"
+    annotated, returned_detections = LabelAnnotator(
+        label_formatter=lambda detection: received.append(detection) or "01:30"
     )(scene, detections)
 
     assert annotated is not scene
@@ -42,9 +42,14 @@ def test_custom_label_annotator_passes_each_detection_to_callback() -> None:
     assert received[0].data["time_in_zone"] == 1.5
 
 
-def test_custom_label_annotator_requires_string_label() -> None:
+def test_label_annotator_requires_string_label() -> None:
     scene = np.zeros((32, 32, 3), dtype=np.uint8)
     detections = sv.Detections(xyxy=np.array([[4, 4, 28, 28]], dtype=np.float32))
 
     with pytest.raises(TypeError, match="must return str"):
-        CustomLabelAnnotator(lambda _: 1)(scene, detections)
+        LabelAnnotator(label_formatter=lambda _: 1)(scene, detections)
+
+
+def test_label_annotator_rejects_callback_with_standard_fields() -> None:
+    with pytest.raises(ValueError, match="cannot be combined"):
+        LabelAnnotator(label_formatter=lambda _: "label", show_class=True)

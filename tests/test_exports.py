@@ -10,7 +10,7 @@ from ml_pipes.supervision.trackers import ByteTrack
 
 def test_public_operator_exports() -> None:
     assert supervision.BoxAnnotator
-    assert supervision.CustomLabelAnnotator
+    assert supervision.LabelAnnotator
     assert supervision.Detection
     assert supervision.Detections
     assert supervision.TrackingTimer

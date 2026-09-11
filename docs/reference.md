@@ -39,13 +39,13 @@ All annotators preserve the detection handoff: `(scene, detections)` ->
 Supervision, so annotation never mutates the source image. Constructor values
 configure the underlying Supervision annotator.
 
-`CustomLabelAnnotator(label)` calls `label(detection)` for every detection.
-The callback receives a `Detection` with its box, confidence, class ID, tracker
-ID, and per-detection data, and must return the label text.
+`LabelAnnotator(label_formatter=...)` calls the formatter for every detection.
+The callback receives a `Detection` with its box, confidence, class ID,
+tracker ID, and per-detection data, and must return the label text.
 
 | Operator group | Operators |
 |---|---|
-| Detection | `BoxAnnotator`, `BoxCornerAnnotator`, `CircleAnnotator`, `ColorAnnotator`, `CustomLabelAnnotator`, `DotAnnotator`, `EllipseAnnotator`, `HaloAnnotator`, `LabelAnnotator`, `OrientedBoxAnnotator`, `RichLabelAnnotator`, `RoundBoxAnnotator`, `TriangleAnnotator` |
+| Detection | `BoxAnnotator`, `BoxCornerAnnotator`, `CircleAnnotator`, `ColorAnnotator`, `DotAnnotator`, `EllipseAnnotator`, `HaloAnnotator`, `LabelAnnotator`, `OrientedBoxAnnotator`, `RichLabelAnnotator`, `RoundBoxAnnotator`, `TriangleAnnotator` |
 | Segmentation and region | `MaskAnnotator`, `PolygonAnnotator`, `PolygonZoneAnnotator`, `BlurAnnotator`, `CropAnnotator`, `HeatMapAnnotator`, `PixelateAnnotator` |
 | Tracking and overlays | `TraceAnnotator`, `FPSAnnotator`, `LineZoneAnnotator`, `BackgroundOverlayAnnotator`, `ComparisonAnnotator`, `IconAnnotator`, `PercentageBarAnnotator` |
 

@@ -1,7 +1,7 @@
 ---
 comments: true
 description: Measure and annotate how long tracked objects remain in a video zone with Supervision and ml-pipes.
-date_modified: 2026-09-10
+date_modified: 2026-09-11
 ---
 
 # Time in Zone
@@ -103,16 +103,16 @@ detections without changing the timer itself.
 
 ## Annotating
 
-`CustomLabelAnnotator` accepts a function that receives one `Detection` at a
-time. Here it formats the tracker ID and the `time_in_zone` field created by
-the timer. `BoxAnnotator`, `TraceAnnotator`, and `PolygonZoneAnnotator` add the
-remaining visual context.
+`LabelAnnotator` can create labels from each detection. Here the label combines
+the tracker ID with the `time_in_zone` field created by the timer.
+`BoxAnnotator`, `TraceAnnotator`, and `PolygonZoneAnnotator` add the remaining
+visual context.
 
 ```{ .py hl_lines="19-30" }
 from ml_pipes.standard import Pick, Recall
 from ml_pipes.supervision import (
     BoxAnnotator,
-    CustomLabelAnnotator,
+    LabelAnnotator,
     PolygonZoneAnnotator,
     TraceAnnotator,
 )
@@ -130,8 +130,8 @@ pipeline = Pipeline(
         Recall("source_frame", prepend=True),
         TraceAnnotator(),
         BoxAnnotator(),
-        CustomLabelAnnotator(
-            lambda detection: (
+        LabelAnnotator(
+            label_formatter=lambda detection: (
                 f"#{int(detection.tracker_id) if detection.tracker_id is not None else -1} "
                 f"{int(float(detection.data['time_in_zone'])) // 60:02d}:"
                 f"{int(float(detection.data['time_in_zone'])) % 60:02d}"
